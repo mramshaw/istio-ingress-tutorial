@@ -6,8 +6,6 @@ This tutorial leverages the [Google Cloud Platform](https://cloud.google.com/) t
 
 [Estimated cost](https://cloud.google.com/products/calculator/#id=e2729d5d-4a6d-4f7e-aebf-47e6e87ee5d5) to run this tutorial: $0.16 per hour ($3.79 per day).
 
-> The compute resources required for this tutorial exceed the Google Cloud Platform free tier.
-
 ## Source
 
 The Istio Ingress Tutorial repository holds a collection of configuration files and scripts that must be downloaded onto the machine used to follow this tutorial. Use the `git` command to clone this repository:
