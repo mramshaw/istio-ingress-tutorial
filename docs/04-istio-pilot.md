@@ -38,6 +38,8 @@ Create the `istio-pilot` deployment:
 kubectl apply -f deployments/istio-pilot.yaml
 ```
 
+[Does not work for Pilot Pre-release 0.2.1, probably need to update deployment.]
+
 ### Expose the Istio Pilot Deployment
 
 Create the `istio-pilot` service:
@@ -57,4 +59,4 @@ NAME                          READY     STATUS    RESTARTS   AGE
 istio-pilot-XXXXXXXXX-XXXXX   2/2       Running   0          1m
 ```
 
-Next: [Provision The Istio Ingress Controller](05-istio-ingress-controller.md)
+Next: [Provision the Istio Ingress Controller](05-istio-ingress-controller.md)

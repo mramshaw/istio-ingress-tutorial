@@ -1,6 +1,6 @@
 # Client Tools
 
-This tutorial requires interacting with a number of tools and services which require a specific set of command line utilities to be installed on the machine used to follow this tutorial.
+This tutorial requires interacting with a number of tools and services which require a specific set of command-line utilities to be installed on the machine used to follow this tutorial.
 
 Install the following client tools and ensure they are in your path:
 
@@ -10,4 +10,4 @@ Install the following client tools and ensure they are in your path:
 
 > Install kubectl using gcloud: gcloud components install kubectl
 
-Next: [Provision The Kubernetes Infrastructure](03-kubernetes-infrastructure.md)
+Next: [Provision the Kubernetes Infrastructure](03-kubernetes-infrastructure.md)

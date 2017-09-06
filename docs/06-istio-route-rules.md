@@ -1,6 +1,6 @@
 # Istio Route Rules
 
-The Istio Ingress Controller provides an [advanced feature set](https://istio.io/docs/concepts/traffic-management/rules-configuration.html) based Envoy's unique traffic management capabilities. This section will demonstrates how to dynamically configure the Istio Ingress Controller using the Istio Pilot and the `istioclt` command line tool.
+The Istio Ingress Controller provides an [advanced feature-set](https://istio.io/docs/concepts/traffic-management/rules-configuration.html) based upon Envoy's unique traffic management capabilities. This section will demonstrate how to dynamically configure the Istio Ingress Controller using the Istio Pilot and the `istioctl` command-line tool.
 
 The `istio-test` HTTP service will be used to demonstrate Istio's traffic management features.
 
@@ -26,7 +26,7 @@ kubectl apply -f ingress/istio-test.yaml
 
 ### Interact with the Istio Ingress Controller
 
-In this section the `curl` command line tool will be used to test the basic functionality of the Istio Ingress Controller.
+In this section the `curl` command-line tool will be used to test the basic functionality of the Istio Ingress Controller.
 
 Retrieve the `istio-ingress` external IP address:
 
@@ -50,9 +50,9 @@ server: envoy
 istio-test-v1
 ```
 
-## Testing Istio Route rules
+## Testing Istio Route Rules
 
-The Isito Ingress Controller can be dynamically configured by the Istio Pilot to provide more advanced routing between external clients and services running in a Kubernetes cluster. To demonstrate these features we need to deploy `v2` of the `istio-test` HTTP service:
+The Istio Ingress Controller can be dynamically configured by the Istio Pilot to provide more advanced routing between external clients and services running in a Kubernetes cluster. To demonstrate these features we need to deploy `v2` of the `istio-test` HTTP service:
 
 ```
 kubectl apply -f deployments/istio-test-v2.yaml
@@ -93,7 +93,7 @@ Notice both `v1` and `v2` of the `istio-test` service are responding.
 
 An [Istio Route Rule](https://istio.io/docs/concepts/traffic-management/rules-configuration.html) can be used to force all clients to hit `v2` of the `istio-test` service.
 
-Create a route rule and save it to a file named `istio-test-default.yaml`:
+Create a Route Rule and save it to a file named `istio-test-default.yaml`:
 
 ```
 cat > istio-test-default.yaml <<EOF
@@ -109,13 +109,13 @@ spec:
 EOF
 ```
 
-Submit the route rule using the `istioctl` command:
+Submit the Route Rule using the `istioctl` command:
 
 ```
 istioctl create -f istio-test-default.yaml
 ```
 
-Route rules are stored in Kubernetes [ThirdPartyResources](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-third-party-resource/)
+Route Rules are stored in Kubernetes [ThirdPartyResources](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-third-party-resource/):
 
 ```
 kubectl get thirdpartyresources
@@ -125,7 +125,7 @@ NAME                    DESCRIPTION           VERSION(S)
 istio-config.istio.io   Istio configuration   v1alpha1
 ```
 
-Inspect the details of the `istio-test-default` route rule configuration:
+Inspect the details of the `istio-test-default` Route Rule configuration:
 
 ```
 kubectl get istioconfigs
@@ -140,6 +140,13 @@ Use the `kubectl describe` command to get more details:
 ```
 kubectl describe istioconfigs route-rule-istio-test-default
 ```
+
+OR:
+
+```
+kubectl describe thirdpartyresource istio-config.istio.io
+```
+
 ```
 Name:         route-rule-istio-test-default
 Namespace:    default
@@ -176,7 +183,7 @@ route:
 
 ### Interact with the Istio Ingress Controller
 
-With the `istio-test-default` route rule in place re-run the `curl` command a few times and observe the response:
+With the `istio-test-default` Route Rule in place re-run the `curl` command a few times and observe the response:
 
 ```
 curl http://${ISTIO_INGRESS_IP}
@@ -194,4 +201,44 @@ curl http://${ISTIO_INGRESS_IP}
 istio-test-v2
 ```
 
-Notice all traffic is handeled by `v2` of the `istio-test` service.
+Notice all traffic is handled by `v2` of the `istio-test` service.
+
+Now delete the Route Rule:
+
+```
+istioctl delete -f istio-test-default.yaml
+```
+
+And create a new one:
+
+```
+cat > istio-test-default.yaml <<EOF
+type: route-rule
+name: istio-test-default
+namespace: default
+spec:
+  destination: istio-test.default.svc.cluster.local
+  route:
+    - tags:
+        version: v1
+      weight: 100
+EOF
+```
+
+Apply it:
+
+```
+istioctl create -f istio-test-default.yaml
+```
+
+With the new `istio-test-default` Route Rule in place re-run the `curl` command a few more times and observe the response:
+
+```
+curl http://${ISTIO_INGRESS_IP}
+```
+
+```
+istio-test-v1
+```
+
+Notice all traffic is handled by `v1` of the `istio-test` service.
